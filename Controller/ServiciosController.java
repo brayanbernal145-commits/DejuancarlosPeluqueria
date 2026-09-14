@@ -7,8 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
@@ -28,8 +31,24 @@ public class ServiciosController {
     @Autowired
     private PdfService pdfService;
 
+    // Helper method to check if user has admin role (role ID 1 or 2)
+    private boolean isAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getAuthorities() != null) {
+            return authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_1") || auth.getAuthority().equals("ROLE_2"));
+        }
+        return false;
+    }
+
     @GetMapping("/pdf")
-    public ResponseEntity<InputStreamResource> generarReporteServicios() {
+    public ResponseEntity<?> generarReporteServicios() {
+        // Only admins can generate service reports
+        if (!isAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("No tiene permisos para generar reportes de servicios.");
+        }
+        
         List<Servicios> servicios = servicioService.getAllservicios();
         ByteArrayInputStream bis = pdfService.generarReporteServicios(servicios);
 
@@ -44,6 +63,7 @@ public class ServiciosController {
 
     @GetMapping
     public List<Servicios> getAllServicios() {
+        // Services list can be viewed by all authenticated users (needed for booking)
         return servicioService.getAllservicios();
     }
 
@@ -54,27 +74,45 @@ public class ServiciosController {
             @RequestParam(required = false, defaultValue = "") String categoria,
             @RequestParam(required = false, defaultValue = "") String estado) {
 
+        // Paginated services can be viewed by all authenticated users (needed for booking)
         Pageable pageable = PageRequest.of(page, size);
         return servicioService.buscarConFiltros(categoria, estado, pageable);
     }
 
     @GetMapping("/{id}")
     public Servicios getServicioById(@PathVariable Long id) {
+        // Service details can be viewed by all authenticated users (needed for booking)
         return servicioService.getServicioById(id);
     }
 
     @PostMapping
-    public Servicios createServicio(@RequestBody Servicios servicio) {
-        return servicioService.createServicio(servicio);
+    public ResponseEntity<?> createServicio(@RequestBody Servicios servicio) {
+        // Only admins can create services
+        if (!isAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("No tiene permisos para crear servicios.");
+        }
+        return ResponseEntity.ok(servicioService.createServicio(servicio));
     }
 
     @PutMapping("/{id}")
-    public Servicios updateServicio(@PathVariable Long id, @RequestBody Servicios servicio) {
-        return servicioService.updateServicio(id, servicio);
+    public ResponseEntity<?> updateServicio(@PathVariable Long id, @RequestBody Servicios servicio) {
+        // Only admins can update services
+        if (!isAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("No tiene permisos para modificar servicios.");
+        }
+        return ResponseEntity.ok(servicioService.updateServicio(id, servicio));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteServicio(@PathVariable Long id) {
+    public ResponseEntity<?> deleteServicio(@PathVariable Long id) {
+        // Only admins can delete services
+        if (!isAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("No tiene permisos para eliminar servicios.");
+        }
         servicioService.deleteServicio(id);
+        return ResponseEntity.noContent().build();
     }
 }
