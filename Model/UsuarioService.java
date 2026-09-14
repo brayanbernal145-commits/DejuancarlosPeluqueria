@@ -3,6 +3,7 @@ package com.DJuanCarlosPeluqueria.DJuanCarlosPeluqueria.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.DJuanCarlosPeluqueria.DJuanCarlosPeluqueria.Model.Repository.UsuarioRepository;
 import java.util.List;
@@ -12,6 +13,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<Usuario> getAllUsuarios() {
         return usuarioRepository.findAll();
@@ -38,6 +42,10 @@ public class UsuarioService {
         if (usuario.getCargo() == null || usuario.getCargo().isEmpty()) {
             usuario.setCargo("Cliente");
         }
+        // Encode password before saving
+        if (usuario.getContrasenia() != null && !usuario.getContrasenia().isEmpty()) {
+            usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
+        }
         return usuarioRepository.save(usuario);
     }
 
@@ -52,7 +60,10 @@ public class UsuarioService {
             existingUsuario.setDireccion(usuario.getDireccion());
             existingUsuario.setGenero(usuario.getGenero());
             existingUsuario.setCargo(usuario.getCargo());
-            existingUsuario.setContrasenia(usuario.getContrasenia());
+            // Only update password if provided and encode it
+            if (usuario.getContrasenia() != null && !usuario.getContrasenia().isEmpty()) {
+                existingUsuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
+            }
             existingUsuario.setEstado(usuario.getEstado());
             existingUsuario.setIdRolFK(usuario.getIdRolFK());
 
