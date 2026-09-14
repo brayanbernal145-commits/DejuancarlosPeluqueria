@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -27,6 +28,8 @@ public class UsuarioController {
     private UsuarioService usuarioService;
     @Autowired
     private PdfService pdfService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public List<Usuario> getallUsuario() {
@@ -48,7 +51,7 @@ public class UsuarioController {
             // Buscamos al usuario por su número de documento
             Usuario usuario = usuarioService.obtenerPorNumDocumento(numDocumento);
 
-            if (usuario != null && usuario.getContrasenia().equals(contrasenia)) {
+            if (usuario != null && passwordEncoder.matches(contrasenia, usuario.getContrasenia())) {
                 // Opcional: limpiar la contraseña antes de responder por seguridad
                 usuario.setContrasenia(null);
                 return ResponseEntity.ok(usuario);
