@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import com.DJuanCarlosPeluqueria.DJuanCarlosPeluqueria.Model.UsuarioService;
 import com.DJuanCarlosPeluqueria.DJuanCarlosPeluqueria.Model.Usuario;
+import com.DJuanCarlosPeluqueria.DJuanCarlosPeluqueria.Model.UsuarioDTO;
 import com.DJuanCarlosPeluqueria.DJuanCarlosPeluqueria.Model.PdfService;
 
 @RestController
@@ -29,8 +30,8 @@ public class UsuarioController {
     private PdfService pdfService;
 
     @GetMapping
-    public List<Usuario> getallUsuario() {
-        return usuarioService.getAllUsuarios();
+    public List<UsuarioDTO> getallUsuario() {
+        return usuarioService.getAllUsuariosDTO();
     }
 
     @PostMapping("/login")
@@ -49,9 +50,9 @@ public class UsuarioController {
             Usuario usuario = usuarioService.obtenerPorNumDocumento(numDocumento);
 
             if (usuario != null && usuario.getContrasenia().equals(contrasenia)) {
-                // Opcional: limpiar la contraseña antes de responder por seguridad
-                usuario.setContrasenia(null);
-                return ResponseEntity.ok(usuario);
+                // Return DTO without password instead of setting password to null
+                UsuarioDTO usuarioDTO = UsuarioDTO.fromEntity(usuario);
+                return ResponseEntity.ok(usuarioDTO);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body("Número de documento o contraseña incorrectos.");
@@ -78,33 +79,33 @@ public class UsuarioController {
     }
 
     @GetMapping("/rol/{idRol}")
-    public ResponseEntity<List<Usuario>> obtenerUsuariosPorRol(@PathVariable("idRol") Long idRol) {
-        List<Usuario> estilistas = usuarioService.obtenerPorRol(idRol);
+    public ResponseEntity<List<UsuarioDTO>> obtenerUsuariosPorRol(@PathVariable("idRol") Long idRol) {
+        List<UsuarioDTO> estilistas = usuarioService.obtenerPorRolDTO(idRol);
         return ResponseEntity.ok(estilistas);
     }
 
     @GetMapping("/paginado")
-    public Page<Usuario> getUsuariosPaginados(
+    public Page<UsuarioDTO> getUsuariosPaginados(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        return usuarioService.getUsuariosPaginados(pageable);
+        return usuarioService.getUsuariosPaginadosDTO(pageable);
     }
 
     @GetMapping("/{id}")
-    public Usuario getUsuarioById(@PathVariable Long id) {
-        return usuarioService.getUsuarioById(id);
+    public UsuarioDTO getUsuarioById(@PathVariable Long id) {
+        return usuarioService.getUsuarioByIdDTO(id);
     }
 
     @PostMapping
-    public Usuario CreateUsuario(@RequestBody Usuario usuario) {
-        return usuarioService.createUsuario(usuario);
+    public UsuarioDTO CreateUsuario(@RequestBody Usuario usuario) {
+        return usuarioService.createUsuarioDTO(usuario);
     }
 
     @PutMapping("/{id}")
-    public Usuario updateUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
-        return usuarioService.updateUsuario(id, usuario);
+    public UsuarioDTO updateUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
+        return usuarioService.updateUsuarioDTO(id, usuario);
     }
 
     @DeleteMapping("/{id}")

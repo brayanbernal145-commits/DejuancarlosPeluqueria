@@ -1,5 +1,6 @@
 package com.DJuanCarlosPeluqueria.DJuanCarlosPeluqueria.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -36,6 +37,7 @@ public class Usuario {
     @Column(name = "cargo")
     private String cargo = "Cliente";
 
+    @JsonIgnore
     @Column(name = "contrasenia")
     private String contrasenia;
 
