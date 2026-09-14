@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+/*colores*/
+:root{
+ --background-color : rgb(0, 0, 0);
+ --text-title-color : #ffffff;
+ --text-color:#D4AF37;
+ --icon-color: #ffffff;
+ --icon-menu-color: #ffffff;
+ --menu-color: #ffffff;
+ --text-selected-color : #633b00d7;
+ --background-selected:#d4af37bd;
+ --background-hover: #f7ebacde ;
+ --white: white;
+ --border-color: #D4AF37;
+}
+/*global*/
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Nunito Sans", sans-serif;
+}
+
+body{
+    background: linear-gradient(135deg,#000000ea,#777777c2,#9e9e9e34),url(https://i.pinimg.com/1200x/9f/44/21/9f4421c5108c0375bfd53a3f76fcf187.jpg);
+    display: flex;
+    background-size: cover;
+    background-attachment: fixed;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Caja principal */
+.caja1{
+    background-color:var(--background-color);
+    width: 400px;
+    padding: 35px 25px;
+    border-radius: 22px;
+    text-align: center;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.35);
+    transition: transform 0.3s;
+}
+.caja2{
+    background-color:var(--background-color);
+    width: 400px;
+    padding: 35px 25px;
+    border-radius: 22px;
+    text-align: center;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.35);
+    transition: transform 0.3s;
+}
+
+.caja1:hover{
+    transform: translateY(-5px);
+}
+.caja2:hover{
+    transform: translateY(-5px);
+}
+
+/* Títulos */
+h2{
+    color: var(--text-title-color);
+    font-size: 32px;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+}
+.caja2 h2{
+     color: var(--text-title-color);
+    font-size: 34px;
+    margin-bottom: -6px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+p{
+    color: var(--text-color);
+    margin-bottom: 25px;
+    font-size: 15px;
+}
+.caja2 p{
+     color: var(--text-color);
+    margin-bottom: 16px;
+    font-size: 15px;
+}
+
+
+/* Inputs */
+input , select{
+    width: 90%;
+    padding: 14px;
+    gap: 2px;
+    margin: 6px 0;
+    border: none;
+    border-radius: 14px;
+    background-color: #f1f1f1;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+input:focus , select:focus{
+    outline: none;
+    background-color: linear-gradient(#3f2f0bea,#cc9921ea,#a57112a6);
+    transform: scale(1.03);
+    box-shadow: 0px 0px 10px rgba(187,65,24,0.4);
+}
+
+/* Botón principal */
+button{
+    width: 90%;
+    padding: 12px;
+    margin-top: 0.4rem;
+    border: none;
+    border-radius: 14px;
+    background-color: #b39124d0;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s ease;
+}
+
+button:hover{
+    background-color: var(--text-selected-color);
+    transform: scale(1.05);
+}
+
+/* Botón secundario */
+a{
+    display: inline-block; /* importante */
+    text-decoration: none;
+    margin-top: -12px;
+    font-size: 1rem;
+    color: var(--text-color);
+    text-shadow: 4px 4px 8px rgb(255, 255, 255);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+a:hover{
+    transform: scale(1.1);
+}
+
+/*VOLVER*/
+.back{
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 90;
+    height: 3.5rem;
+    width: 3.5rem;
+    background: linear-gradient(135deg, #D4AF37 0%, #ffd700 100%);
+    font-size: 1.8rem;
+    text-decoration: none;
+    border-radius: 30%;
+    border: none;
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.35);
+    transition: all 0.4s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+}
+
+.back:hover{
+    transform: translateX(-6px) scale(1.1);
+    box-shadow: 0 12px 30px rgba(212, 175, 55, 0.5);
+}
+
+.back:active{
+    transform: translateX(-6px) scale(0.98);
+}
+.a{
+    margin-top: 0;
+    margin-right: 0;
+}
+img{
+    margin-right: 1rem;
+    height: 2.5rem;
+    width: 2.5rem;
+}
+/* Responsive */
+@media(max-width:500px){
+
+    .caja1{
+        width: 90%;
+        padding: 25px 15px;
+    }
+    .caja2{
+        width: 90%;
+        padding: 25px 15px;
+    }
+
+    h2{
+        font-size: 26px;
+    }
+
+}

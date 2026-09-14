@@ -1,0 +1,311 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+/*colores*/
+:root{
+ --background-color : rgba(0, 0, 0, 0.86);
+ --text-title-color : #ffffff;
+ --text-color:#D4AF37;
+ --text-color-N:#000000;
+ --icon-color: #ffffff;
+ --icon-menu-color: #ffffff;
+ --menu-color: #ffffff;
+ --text-selected-color : #cacaca;
+ --background-selected:#d4af37bd;
+ --background-hover: #f7ebacde ;
+ --white: white;
+ --crema: #ebbe2d8a;
+ --border-color: #D4AF37;
+}
+/*global*/
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Nunito Sans", sans-serif;
+}
+/*bddy*/
+body{
+     background: url(../bostraap/icons/fondo.jpg);
+    color: var(--text-color);
+    overflow-x:hidden;
+    background-size: cover;
+}
+/*header*/
+header{
+    z-index: 200;
+    width: 100%;
+    display:flex;
+    justify-content: space-between;
+    padding: 0.45rem 2rem 0.45rem 1.27rem;
+    border-bottom: 1px solid var(--border-color);
+    position: fixed;
+    background-color: var(--background-color);
+    top: 0;
+    left: 0;
+}
+/*home*/
+.home{
+    background:
+    linear-gradient(135deg,#000000ea,#777777c2,#9e9e9e34),
+    url('https://images.unsplash.com/photo-1560066984-138dadb4c035');
+    height: 50vh;
+    width: 100%;
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:0% 10%;
+    border-radius: 20px;
+    top : 0;
+    left: 0;
+}
+/*home*/
+    .home .bienvenido{
+    margin-top: -2rem;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 4.5rem;
+    color: var(--text-color);
+    text-shadow: 3px 3px 5px rgba(0,0,0,.829);
+}
+.home p{
+    text-align:center;
+    letter-spacing: 4px;
+    font-family: 'Nunito Sans', sans-serif;
+    color:var(--text-title-color);
+    top: 0.7rem;
+    margin-bottom: 40px;
+    font-size: 1.7rem;
+}
+.home h1{
+    text-align:center;
+    justify-content: center;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 2rem;
+    color: var(--text-title-color);
+    margin-bottom: 25px;
+} 
+/*left*/
+.left{
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap :1.4rem;
+}
+/*menu*/
+.menu_container{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.menu{
+    width: 1.8rem;
+    height: 37%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.menu div{
+    width: 100%;
+    height: 0.17rem;
+    background-color: var(--menu-color);
+    transition: all 0.2s;
+}
+.menu.menu-toggle div:first-child{
+    width: 40%;
+    transform: rotate(-30deg) translate(-30%, 175%);
+}
+.menu.menu-toggle div:last-child{
+    width: 40%;
+    transform: rotate(30deg) translate(-30%, -160%);
+}
+/*brad*/
+.brad{
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.brad .logo{
+      width: 4.2rem;
+      border-radius: 10% ;
+}
+.brad .name{
+    margin-top: 0.2rem;
+    font-size: 1.7rem;
+    font-weight: 950;
+    color: var(--text-title);
+}
+/*right*/
+.right{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.6rem;
+}
+.right a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s, transform 0.3s ease;
+    border-bottom: var(--border-color);
+}
+.right a:hover{
+    background-color: var(--background-hover);
+    transform: scale(1.1);
+}
+.right img{
+    width: 1.5rem;
+    margin: 0.5rem;
+}
+.right .user{
+    cursor: pointer;
+    width: 2.1rem;
+    border-radius: 40%;
+}
+
+/*sidebar*/
+.sidebar {
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between;
+    margin-top: 4.1rem;
+    width:18.75rem;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    padding:1.1rem 0;
+    border-right: 2px var(--border-color) ;
+    overflow-y: auto;
+    background-color: var(--background-color);
+    transition: width 0.3s ease;
+}
+.sidebar.menu-toggle{
+        width: 4rem;
+     overflow: hidden;
+}
+.sidebar a{
+    display: flex;
+    align-items: center;
+    gap: 1.3rem;
+    padding: 0.9rem 0.7rem;
+    text-decoration: none;
+    margin: 0 0.5rem;
+    border-radius: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    color:var(--text-color);
+    transition: background-color 0.3s, transform 0.3s ease;
+}
+.sidebar a:hover{
+    background-color: var(--background-hover);
+    transform: scale(1.1);
+}
+
+.sidebar img{
+   width: 1.6rem;
+}
+.sidebar a.selected{
+    color: var(--text-selected-color);
+    background-color: var(--background-selected);
+}
+.sidebar a.search{
+    padding: 1rem 0.7rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 0.2rem;
+}
+/*foteer*/
+.footer{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 10.5rem;
+    padding: 1rem 1rem 1rem ;
+    box-shadow: 0 -0.1rem 00 var(--border-color);
+}
+.user-info.menu-toggle{
+     width: 4rem;
+     overflow: hidden;
+}
+.user{
+    display: flex;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+.user-info .nombre{
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+/*main*/
+main{
+    align-items: center;
+    text-align: center;
+    margin-top: 3rem;
+    margin-left: 18.75rem;
+    padding: 3rem;
+    transition: margin-left 0.5s ease;
+}
+main.menu-toggle{
+    margin-left: 4rem;
+}
+/*SERVICIOS*/
+.services-grid{
+    background: rgba(18, 18, 18, 0.94);
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    width: 80%;
+    border-radius: 20px;
+    padding: 4% 4%;
+    margin: 50px auto;
+    margin-top: -8.6rem; 
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+}
+
+.service-card{
+    background: rgba(255, 255, 255, 0.08);
+    padding: 40px 30px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    text-align: center;
+    transition: 0.4s;
+}
+
+.service-card h3{
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #ffd700;
+}
+.service-card p{
+    color: #e0e0e0;
+}
+.service-card:hover{
+    transform: translateY(-10px);
+    box-shadow: 0 0 25px rgba(228, 181, 29, 0.753);
+    background: rgba(255, 255, 255, 0.12);
+}
+.service-card a{
+    display: inline-block;
+    text-decoration: none;
+    color: #f2f2f2;
+    font-size: 1.2rem;
+    padding: 0.75rem 1.2rem;
+    border-radius: 0.9rem;
+    background: rgba(199, 151, 20, 0.801);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.service-card a:hover{
+    background: var(--crema);
+    transform: translateY(-2px);
+}
+
