@@ -63,6 +63,8 @@ public class CitaController {
 
     @PostMapping
     public Cita createCita(@RequestBody Cita cita) {
+        // Prevent ID injection: ensure the create operation always generates a new ID
+        cita.setIdCita(null);
         return citaService.createCita(cita);
     }
 
