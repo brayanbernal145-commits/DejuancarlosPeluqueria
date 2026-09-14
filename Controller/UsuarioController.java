@@ -10,13 +10,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Map;
 import com.DJuanCarlosPeluqueria.DJuanCarlosPeluqueria.Model.UsuarioService;
 import com.DJuanCarlosPeluqueria.DJuanCarlosPeluqueria.Model.Usuario;
 import com.DJuanCarlosPeluqueria.DJuanCarlosPeluqueria.Model.PdfService;
+import com.DJuanCarlosPeluqueria.DJuanCarlosPeluqueria.Config.CustomUserDetailsService;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -27,6 +36,8 @@ public class UsuarioController {
     private UsuarioService usuarioService;
     @Autowired
     private PdfService pdfService;
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
 
     @GetMapping
     public List<Usuario> getallUsuario() {
@@ -34,7 +45,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials, HttpServletRequest request) {
         try {
             String numDocumentoStr = credentials.get("numDocumento");
             String contrasenia = credentials.get("contrasenia");
@@ -49,7 +60,26 @@ public class UsuarioController {
             Usuario usuario = usuarioService.obtenerPorNumDocumento(numDocumento);
 
             if (usuario != null && usuario.getContrasenia().equals(contrasenia)) {
-                // Opcional: limpiar la contraseña antes de responder por seguridad
+                // Verificar que el usuario esté activo
+                if (!"Activo".equals(usuario.getEstado())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body("Usuario inactivo. Contacte al administrador.");
+                }
+
+                // Cargar UserDetails y crear autenticación
+                UserDetails userDetails = userDetailsService.loadUserByUsername(numDocumentoStr);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, contrasenia, userDetails.getAuthorities());
+                
+                // Establecer el contexto de seguridad
+                SecurityContext securityContext = SecurityContextHolder.getContext();
+                securityContext.setAuthentication(authentication);
+                
+                // Crear sesión HTTP y almacenar el contexto de seguridad
+                HttpSession session = request.getSession(true);
+                session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
+
+                // Limpiar la contraseña antes de responder por seguridad
                 usuario.setContrasenia(null);
                 return ResponseEntity.ok(usuario);
             } else {
@@ -63,6 +93,22 @@ public class UsuarioController {
                     .body("Error en el servidor al intentar iniciar sesión.");
         }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            SecurityContextHolder.clearContext();
+            return ResponseEntity.ok("Sesión cerrada exitosamente.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al cerrar sesión.");
+        }
+    }
+
     @GetMapping("/pdf")
     public ResponseEntity<InputStreamResource> descargarPdfUsuarios() {
         List<Usuario> usuarios = usuarioService.getAllUsuarios();
